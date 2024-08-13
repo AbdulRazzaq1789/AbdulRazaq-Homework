@@ -1,0 +1,29 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self):
+        pass
+class Square(Shape):
+    def area(self, side):
+        return side**2
+class Triangle(Shape):
+    def area(self, width, height):
+        return (width*height)/2
+sqr = Square()
+print(sqr.area(10))
+tri = Triangle()
+print(tri.area(10,12))

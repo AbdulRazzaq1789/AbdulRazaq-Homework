@@ -1,0 +1,80 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class WeatherApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Weather App")
+
+        # Your API key
+        self.api_key = "369d67c1c7a74a4689f163211242307"
+        self.base_url = "http://api.weatherapi.com/v1/current.json"
+
+        # City Label and Entry
+        self.city_label = tk.Label(root, text="City:")
+        self.city_label.pack(pady=5)
+
+        self.city_entry = tk.Entry(root)
+        self.city_entry.pack(pady=5)
+
+        # Fetch Weather Button
+        self.fetch_button = tk.Button(root, text="Get Weather", command=self.get_weather)
+        self.fetch_button.pack(pady=10)
+
+        # Weather Information Display
+        self.weather_info = tk.Text(root, height=10, width=50)
+        self.weather_info.pack(pady=5)
+
+    def get_weather(self):
+        city = self.city_entry.get()
+        if city:
+            weather_data = self.fetch_weather_data(city)
+            if weather_data:
+                self.display_weather(weather_data)
+            else:
+                messagebox.showerror("API Error", "Could not fetch weather data.")
+        else:
+            messagebox.showwarning("Input Error", "Please enter a city name.")
+
+    def fetch_weather_data(self, city):
+        try:
+            params = {
+                'key': self.api_key,
+                'q': city
+            }
+            response = requests.get(self.base_url, params=params)
+            response.raise_for_status()
+            data = response.json()
+            weather_info = f"Weather data for {city}:\n"
+            weather_info += f"Temperature: {data['current']['temp_c']}°C\n"
+            weather_info += f"Condition: {data['current']['condition']['text']}\n"
+            weather_info += f"Humidity: {data['current']['humidity']}%\n"
+            weather_info += f"Wind: {data['current']['wind_kph']} km/h"
+            return weather_info
+        except requests.RequestException as e:
+            print(f"Error fetching data: {e}")
+            return None
+
+    def display_weather(self, weather_data):
+        self.weather_info.delete(1.0, tk.END)
+        self.weather_info.insert(tk.END, weather_data)
+
+
+# Create the main window
+root = tk.Tk()
+app = WeatherApp(root)
+
+# Run the application
+root.mainloop()

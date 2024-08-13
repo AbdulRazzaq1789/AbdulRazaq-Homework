@@ -1,0 +1,22 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Employee:
+    name:str
+    salary:float
+@dataclass
+class Manager(Employee):
+    department:str

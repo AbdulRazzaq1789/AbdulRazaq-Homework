@@ -1,0 +1,137 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class CalculatorApp:
+    @dataclass(repr=False, eq=False)
+    class TkButton:
+        value: str
+        parent: typing.Optional[tk.Widget]
+        entry_value: typing.Optional[tk.Variable]
+        row: int
+        column: int
+        columnspan: int = 1
+        command_type: bool = False
+        # Class variable to indicate if the equation is solved
+        solved: bool = False
+        def __post_init__(self):
+            self.display_button()
+            self.signs = ['+', "-", "x", "/"]
+        def display_button(self):
+            button = tk.Button(self.parent, text=self.value, font=("Arial", 16), command=self.button_action)
+            button.grid(row=self.row, column=self.column, columnspan=self.columnspan, sticky='ewns', padx=2, pady=2)
+        def button_action(self):
+            if not self.command_type:
+                if CalculatorApp.TkButton.solved:
+                    CalculatorApp.TkButton.solved = False
+                    self.entry_value.set("")
+                return self.insert()
+            else:
+                if self.value in ["C", "CE"]:
+                    self.entry_value.set("")
+                    CalculatorApp.TkButton.solved = False
+                    return
+                if self.value == "=":
+                    if self.entry_value.get():
+                        try:
+                            equation = self.entry_value.get()
+                            equation = equation.replace("x", "*")
+                            if equation[0] == "0" and equation[1] in map(str, range(0, 10)):
+                                equation = equation[1:]
+                                self.entry_value.set(equation)
+                                return self.button_action()
+                            if equation[-1] in self.signs:
+                                equation = equation[:-1]
+                                self.entry_value.set(equation)
+                                return self.button_action()
+                            if equation == ".":
+                                equation = equation[:-1]
+                                self.entry_value.set(equation)
+                                return self.button_action()
+                            CalculatorApp.TkButton.solved = True
+                            self.entry_value.set(eval(equation))
+                            return
+                        except Exception as e:
+                            self.entry_value.set("")
+                            messagebox.showerror("Error", f"{e}")
+                            return
+                    else:
+                        return
+                if self.value == ".":
+                    equation: str = self.entry_value.get()
+                    last_index = 0
+                    for sign in self.signs:
+                        for index, value in enumerate(equation):
+                            if value == sign:
+                                if index and index > last_index:
+                                    last_index = index
+                    for i in equation[last_index:]:
+                        if i == ".":
+                            break
+                    else:
+                        self.insert()
+                if self.value in self.signs:
+                    entry = self.entry_value.get()
+                    if entry:
+                        if entry[-1] in self.signs:
+                            pass
+                        else:
+                            self.insert()
+                    else:
+                        if self.value in ["+", "-"]:
+                            self.insert()
+                if self.value == "CE":
+                    self.entry_value.set("")
+                    return
+                if self.value == "C":
+                    self.entry_value.set(self.entry_value.get()[:-1])
+                    return
+        def insert(self):
+            entry_data = self.entry_value.get() + self.value
+            self.entry_value.set(entry_data)
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.geometry("400x300")
+        self.root.minsize(300, 200)
+        self.root.title("Calculator")
+        self.root.resizable(width=False, height=False)
+        self.equation = tk.StringVar()
+        self.equation.set('')
+        self.entry = tk.Entry(self.root, font=("Arial", 20), state="readonly", textvariable=self.equation)
+        self.entry.pack(padx=10, pady=10, fill='x')
+        self.frame = tk.Frame(self.root)
+        self.frame.pack(fill='both', expand=True)
+        for i in range(4):
+            self.frame.grid_rowconfigure(i, weight=1)
+            self.frame.grid_columnconfigure(i, weight=1)
+        self.frame.grid_rowconfigure(4, weight=1)
+        self.buttons = []
+        self.create_buttons()
+        self.root.mainloop()
+    def create_buttons(self):
+        self.buttons.append(self.TkButton("+", self.frame, self.equation, 0, 0, 2, command_type=True))
+        self.buttons.append(self.TkButton("-", self.frame, self.equation, 0, 2, 2, command_type=True))
+        self.buttons.append(self.TkButton("x", self.frame, self.equation, 1, 3, 1, command_type=True))
+        self.buttons.append(self.TkButton("/", self.frame, self.equation, 2, 3, 1, command_type=True))
+        self.buttons.append(self.TkButton(".", self.frame, self.equation, 3, 3, 1, command_type=True))
+        self.buttons.append(self.TkButton("=", self.frame, self.equation, 4, 3, 1, command_type=True))
+        self.buttons.append(self.TkButton("CE", self.frame, self.equation, 4, 2, 1, command_type=True))
+        self.buttons.append(self.TkButton("C", self.frame, self.equation, 4, 0, 1, command_type=True))
+        self.buttons.append(self.TkButton("0", self.frame, self.equation, 4, 1, 1))
+        row = 0
+        for i in range(9):
+            if i % 3 == 0:
+                row += 1
+            self.buttons.append(self.TkButton(f"{i + 1}", self.frame, self.equation, row, i - (row - 1) * 3))
+CalculatorApp()

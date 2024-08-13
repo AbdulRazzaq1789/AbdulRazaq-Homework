@@ -1,0 +1,43 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Zoo:
+    @dataclass
+    class Animal:
+        _type: str
+        _sex: str
+        _number: int
+    _name: str
+    _animals: list
+    @property
+    def animals(self):
+        return self._animals
+    def add_animal(self, animal):
+        for anm in self.animals:
+            if animal == anm:
+                print(f"{anm} already exists")
+                break
+        else:
+            self.animals.append(animal)
+    def remove_animal(self, animal):
+        for anm in self.animals:
+            if animal == anm:
+                self.animals.remove(animal)
+                print(f"{anm} removed.")
+                break
+        else:
+            print(f"{animal} does not exist.")
+File Handling and Exceptions Exercises

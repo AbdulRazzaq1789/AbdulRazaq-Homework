@@ -1,0 +1,57 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Hotel:
+    @dataclass
+    class Room:
+        room_number: int
+        is_occupied: bool = False
+    name: str
+    rooms: typing.Set[Room] = field(default_factory=set)
+    def add_room(self, room_number):
+        room = self.Room(room_number)
+        for item in self.rooms:
+            if item.room_number == room_number:
+                print(f"Room {room_number} already exists.")
+                break
+        else:
+            self.rooms.add(room)
+            print(f"Room {room_number} added to the list")
+    def book_room(self, room_number, booked_by):
+        for room in self.rooms:
+            if room.room_number == room_number:
+                if room.is_occupied:
+                    print(f"Room {room_number} is already occupied.")
+                else:
+                    room.is_occupied = True
+                    room.booked_by = booked_by
+                    print(f"Room {room_number} was booked by {booked_by}.")
+                return
+        else:
+            print(f"Room {room_number} does not exist!")
+    def check_out(self, room_number):
+        for room in self.rooms:
+            if room.room_number == room_number:
+                if room.is_occupied:
+                    print(f"Room {room_number} was checked-out.")
+                    room.is_occupied = False
+                    room.booked_by = ""  # Clear booked_by when checking out
+                else:
+                    print(f"The room {room_number} was not booked.")
+                return
+        else:
+            print(f"Room {room_number} does not exist!")
+GUI Application Exercises

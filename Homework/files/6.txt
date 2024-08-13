@@ -1,0 +1,30 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class Animal(ABC):
+    @abstractmethod
+    def speak(self):
+        print("Animal")
+class Dog(Animal):
+    def speak(self):
+        print("Bark")
+    pass
+class Cat(Animal):
+    def speak(self):
+        print("Meow")
+cat = Cat()
+cat.speak()
+dog = Dog()
+dog.speak()

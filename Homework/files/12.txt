@@ -1,0 +1,39 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class Book:
+    def __init__(self, title, author, pages):
+        self._title = title
+        self._author = author
+        self._pages = pages
+    @property
+    def title(self):
+        return f"The title of the book is {self._title}"
+    @title.setter
+    def title(self, title):
+        self._title = title
+    @property
+    def author(self):
+        return f"The author of the book is {self._author}"
+    @author.setter
+    def author(self, author):
+        self._author = author
+    @property
+    def pages(self):
+        return f"The book has {self._pages} pages."
+    @pages.setter
+    def pages(self, pages):
+        self._pages = pages
+book = Book("OOPs", "EMF", 10)

@@ -1,0 +1,28 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class Bird(ABC):
+    @abstractmethod
+    def fly():
+        pass
+class Eagle(Vehicle):
+    @staticmethod
+    def fly():
+        print("Eagle can fly!")
+class Penguin(Vehicle):
+    @staticmethod
+    def fly():
+        print("Penguin can not fly")
+Encapsulation and Abstraction Exercises

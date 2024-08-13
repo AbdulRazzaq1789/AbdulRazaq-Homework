@@ -1,0 +1,135 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class ToDoApp:
+    @dataclass
+    class LabelManager:
+        content: str
+        parent: typing.Optional[tk.Widget] = None
+        label: tk.Label = field(init=False)
+        def __post_init__(self):
+            self.label = tk.Label(self.parent, text=self.content, font=("Arial", 16))
+    def __init__(self):
+        self.main_menu = None
+        self.frame = None
+        self.root = tk.Tk()
+        self.root.geometry("600x400")
+        self.root.title("ToDo App")
+        self.root.minsize(600, 400)
+        self.labels = []
+        self.tk_labels = []
+        self.create_menubar()
+        self.title = tk.Label(self.root, text="To Do list", font=("Arial", 20))
+        self.title.pack(pady=10)
+        self.create_frames()
+        self.display_labels()
+        self.root.mainloop()
+    def create_menubar(self):
+        self.main_menu = tk.Menu(self.root)
+        self.action_menu = tk.Menu(self.main_menu, tearoff=0)
+        self.main_menu.add_cascade(label="Action", menu=self.action_menu)
+        self.action_menu.add_command(label="Add", command=self.add_label)
+        self.action_menu.add_command(label="Remove", command=self.remove_label)
+        self.action_menu.add_command(label="Edit", command=self.edit_label)
+        self.root.config(menu=self.main_menu)
+    def create_frames(self):
+        self.frame = tk.Frame(self.root)
+        self.frame.pack(fill='both', expand=True)
+    def display_labels(self):
+        if self.labels or self.tk_labels:
+            for label in self.tk_labels:
+                label.destroy()
+            self.tk_labels.clear()
+            for index, label in enumerate(self.labels):
+                self.tk_labels.append(tk.Label(self.frame, text=f"{index + 1}- {label.content}", font=("Arial", 12)))
+            for label in self.tk_labels:
+                label.pack(pady=(0, 10), padx=(20), anchor="w")
+    def create_window(self, button_content, function):
+        window = tk.Toplevel(self.root)
+        window.geometry("400x100")
+        frame = tk.Frame(window)
+        frame.pack(padx=20, pady=10)
+        label = tk.Label(frame, text="Content: ", font=("Arial", 12))
+        label.grid(row=0, column=0, padx=(0, 10))
+        entry = tk.Entry(frame, width=50, font=("Arial", 12))
+        entry.grid(row=0, column=1)
+        button = tk.Button(window, text=button_content, font=("Arial", 12), command=function)
+        button.pack(pady=10)
+        return window, entry
+    def add_label(self):
+        def create_label():
+            if entry.get():
+                label_obj = self.LabelManager(entry.get(), self.frame)
+                self.labels.append(label_obj)
+                self.display_labels()
+                window.destroy()
+            else:
+                messagebox.showinfo(title="Empty box!", message="You didn't fill the input box!")
+                window.destroy()
+        window, entry = self.create_window("Add", create_label)
+    def remove_label(self):
+        def remove():
+            if selection_box.get()[:2].isdigit():
+                label_number = int(selection_box.get()[:2])
+            else:
+                label_number = int(selection_box.get()[:1])
+            del self.labels[label_number - 1]
+            self.display_labels()
+            options_window.destroy()
+            messagebox.showinfo(title="Remove Content!", message="Content was successfully deleted.")
+        if self.labels:
+            options = [
+                f"{index + 1}- {value.content if len(value.content) <= 10 else value.content[:9]}{'...' if len(value.content) > 10 else ''}"
+                for index, value in enumerate(self.labels)]
+            options_window = tk.Toplevel(self.root)
+            options_window.geometry("400x100")
+            selection_box = ttk.Combobox(options_window, values=options, state='readonly')
+            selection_box.set(options[0])
+            selection_box.pack(pady=10)
+            button = tk.Button(options_window, text="Select", font=("Arial", 12), command=remove)
+            button.pack(pady=10)
+        else:
+            messagebox.showwarning("Empty", "No content inserted")
+    def edit_label(self):
+        def edit_label():
+            def create_label():
+                options_window.destroy()
+                if entry.get():
+                    self.labels[label_number - 1].content = entry.get()
+                    self.display_labels()
+                    messagebox.showinfo(title="Content Edit!", message="Content was successfully edited.")
+                    window.destroy()
+                else:
+                    messagebox.showinfo(title="Empty box!", message="You didn't fill the input box!")
+                    window.destroy()
+            if selection_box.get()[:2].isdigit():
+                label_number = int(selection_box.get()[:2])
+            else:
+                label_number = int(selection_box.get()[:1])
+            window, entry = self.create_window("Edit", create_label)
+            entry.insert(0, self.labels[label_number - 1].content)
+        if self.labels:
+            options = [
+                f"{index + 1}- {value.content if len(value.content) <= 10 else value.content[:9]}{'...' if len(value.content) > 10 else ''}"
+                for index, value in enumerate(self.labels)]
+            options_window = tk.Toplevel(self.root)
+            options_window.geometry("400x100")
+            selection_box = ttk.Combobox(options_window, values=options, state='readonly')
+            selection_box.set(options[0])
+            selection_box.pack(pady=10)
+            button = tk.Button(options_window, text="Select", font=("Arial", 12), command=edit_label)
+            button.pack(pady=10)
+        else:
+            messagebox.showwarning("Empty", "No content inserted")

@@ -1,0 +1,29 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class Report:
+    def __init__(self, filename):
+        self.filename = filename
+    def generate_report(self):
+        try:
+            with open(self.filename, "r") as file:
+                data = file.read()
+                # Generate report from data
+                print(data)
+        except FileNotFoundError:
+            print(f"File {self.filename} not found!")
+        except Exception as e:
+            print(f"An error occurred while reading the file: {e}")
+Real-world Application Exercises

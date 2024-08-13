@@ -1,0 +1,42 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class FileManager:
+    def __init__(self, file_path):
+        self.file_path = file_path
+    def write_to_file(self, content):
+        try:
+            with open(self.file_path, "w") as file:
+                file.write(content)
+            print(f"Successfully wrote to {self.file_path}")
+        except Exception as e:
+            print(f"An Error Occurred as {e}")
+    def append_to_file(self, content):
+        try:
+            with open(self.file_path) as file:
+                file.write(content)
+            print(f"Successfully wrote to {self.file_path}")
+        except Exception as e:
+            print(f"An error occurred while appending to the file: {e}")
+    def read_from_file(self):
+        try:
+            with open(self.file_path) as file:
+                return file.read()
+        except FileNotFoundError:
+            print(f"File {self.file_path} not found")
+            return None
+        except Exception as e:
+            print(f"An error occurred while reading the file: {e}")
+            return None

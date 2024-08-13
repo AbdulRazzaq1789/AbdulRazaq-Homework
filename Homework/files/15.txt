@@ -1,0 +1,39 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Student:
+    _name:str
+    _grade:str
+    _age:int
+    @property
+    def name(self):
+        return self._name
+    @name.setter
+    def name(self, name):
+        self._name = name
+    @property
+    def grade(self):
+        return self._grade
+    @grade.setter
+    def grade(self, grade):
+        self._grade = grade
+    @property
+    def age(self):
+        return self._age
+    @age.setter
+    def age(self, age):
+        self._age = age
+Class Relationships and Advanced Concepts Exercises

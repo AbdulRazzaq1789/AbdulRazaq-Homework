@@ -1,0 +1,32 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class CounterApp:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.geometry("300x200")
+        self.root.title("Counter App")
+        self.root.minsize(300, 200)
+        self.label = tk.Label(self.root, text="0", font=("Arial", 32))
+        self.label.pack(pady = (50,0))
+        self.button_frame = tk.Frame(self.root)
+        self.button_frame.pack(pady = 10)
+        self.next_button = tk.Button(self.button_frame, text="Next", font=("Arial", 12), width=10, command=lambda:self.button_action(1))
+        self.prev_button = tk.Button(self.button_frame, text="Previous", font=("Arial", 12), width=10, command=lambda:self.button_action(-1))
+        self.next_button.grid(row=0, column=1)
+        self.prev_button.grid(row=0, column=0)
+        self.root.mainloop()
+    def button_action(self, value):
+        self.label.config(text=f"{int(self.label['text'])+value}")

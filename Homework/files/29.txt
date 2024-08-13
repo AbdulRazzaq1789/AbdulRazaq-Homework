@@ -1,0 +1,42 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Flight:
+    @dataclass
+    class Passenger:
+        name: str
+        age: int
+        passport_no: str
+    flight_number: int
+    destination: str
+    passengers: typing.List[Passenger] = field(default_factory=list)
+    def add_passenger(self, passenger_name, passenger_age, passenger_passport):
+        passenger = self.Passenger(passenger_name, passenger_age, passenger_passport)
+        for item in self.passengers:
+            if item == passenger:
+                print(f"Passenger {passenger_name} already added.")
+                break
+        else:
+            self.passengers.append(passenger)
+            print(f"Passenger {passenger_name} added to the list.")
+    def remove_passenger(self, passenger_name, passenger_passport):
+        for item in self.passengers:
+            if item.name == passenger_name and item.passport_no == passenger_passport:
+                self.passengers.remove(item)
+                print(f"Passenger {passenger_name} removed from the list.")
+                break
+        else:
+            print(f"Passenger {passenger_name} does not exist.")

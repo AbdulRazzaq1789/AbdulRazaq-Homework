@@ -1,0 +1,46 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Restaurant:
+    @dataclass
+    class Item:
+        name: str
+        price: int
+    name: str
+    menu_items: typing.List[Item] = field(default_factory=list)
+    def add_item(self, item_name: str, price: int):
+        item = self.Item(item_name, price)
+        for itm in self.menu_items:
+            if itm == item:
+                print(f"Item already added to the menu!")
+                break
+        else:
+            self.menu_items.append(item)
+            print(f"Item {item.name} added to the menu.")
+    def remove_item(self, item_name: str):
+        for item in self.menu_items:
+            if item.name == item_name:
+                self.menu_items.remove(item)
+                print(f"Item {item_name} removed from menu")
+                break
+        else:
+            print(f"Item {item_name} not found in menu!")
+    def __str__(self):
+        if not self.menu_items:
+            print("Menu is empty")
+            return None
+        items = "\n".join(f"{item.name}: {item.price}" for item in self.menu_items)
+        return f"Items Menu\n{items}"

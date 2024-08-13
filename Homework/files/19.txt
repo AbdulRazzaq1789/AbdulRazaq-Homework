@@ -1,0 +1,43 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Company:
+    @dataclass
+    class Employee:
+        _name: str
+        _salary: int
+        _department: str
+    _name: str
+    _employees: list
+    @property
+    def employees(self):
+        return self._employees
+    def __iadd__(self, employee):
+        for emp in self.employees:
+            if emp == employee:
+                print(f"{employee} already exists.")
+                break
+        else:
+            self.employees.append(employee)
+        return self
+    def __isub__(self, employee):
+        for emp in self.employees:
+            if emp == employee:
+                self.employees.remove(emp)
+                break
+        else:
+            print(f"{employee} not found")
+        return self

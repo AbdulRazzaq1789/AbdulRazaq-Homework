@@ -1,0 +1,31 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class Vehicle(ABC):
+    @abstractmethod
+    def drive():
+        pass
+class Bike(Vehicle):
+    @staticmethod
+    def drive():
+        print("Bike moves")
+class Truck(Vehicle):
+    @staticmethod
+    def drive():
+        print("Truck moves")
+bike = Bike()
+bike.drive()
+truck = Truck()
+truck.drive()

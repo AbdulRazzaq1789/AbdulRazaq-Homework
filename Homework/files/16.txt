@@ -1,0 +1,38 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Library:
+    _name:str
+    _books:list
+    @property
+    def name(self):
+        return self.name
+    @name.setter
+    def name(self, name):
+        self._name = name
+    @property
+    def books(self):
+        return ", ".join(self._books)
+    @books.setter
+    def books(self, books):
+        self._books = books
+    def __iadd__(self, book):
+        self._books.append(book)
+        print(f"{book} added to the books list.")
+        return self
+lib = Library("Main", ['oops', 'c'])
+lib += "c++"
+print(lib)

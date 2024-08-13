@@ -1,0 +1,46 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class ShoppingCart:
+    @dataclass
+    class Item:
+        name: str
+        price: int
+    items: list = field(init=False)
+    def __post_init__(self):
+        self.items = []
+    def add(self, item_name, price):
+        item = self.Item(item_name, price)
+        for itm in self.items:
+            if itm == item:
+                print(f"Item {item.name} already added to the cart")
+                break
+        else:
+            self.items.append(item)
+    def remove(self, item_name):
+        for item in self.items:
+            if item.name == item_name:
+                self.items.remove(item)
+                print(f"Item {item_name} removed from the cart.")
+                break
+        else:
+            print(f"Item {item_name} not available in the cart.")
+    def __str__(self):
+        if not self.items:
+            print("Shopping cart is empty")
+        else:
+            string = "\n".join(f"{item.name}: {item.price}" for item in self.items)
+            return f"Items in the Shopping cart:\n{string}"

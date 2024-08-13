@@ -1,0 +1,40 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+class Config:
+    def __init__(self, config_file):
+        self.config_file = config_file
+        self.settings = self._read_config()
+    def _read_config(self):
+        """Read the configuration file and return the settings as a dictionary."""
+        try:
+            with open(self.config_file, 'r') as file:
+                return json.load(file)
+        except FileNotFoundError:
+            print(f"Configuration file {self.config_file} not found.")
+            return {}
+        except json.JSONDecodeError:
+            print(f"Error decoding JSON from the configuration file {self.config_file}.")
+            return {}
+    def get(self, key, default=None):
+        """Get a configuration value by key."""
+        keys = key.split('.')
+        value = self.settings
+        try:
+            for k in keys:
+                value = value[k]
+            return value
+        except KeyError:
+            return default

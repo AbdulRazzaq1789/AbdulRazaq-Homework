@@ -1,0 +1,40 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class BankAccount:
+    _account_number:int
+    _balance:int
+    @property
+    def account_number(self):
+        return self._account_number
+    @account_number.setter
+    def account_number(self, account_number):
+        self._account_number = account_number
+    @property
+    def balance(self):
+        return self._balance
+    @balance.setter
+    def balance(self,balance):
+        self._balance = balance
+    def deposit(self, amount):
+        self.balance += amount
+        print(f"You deposited {amount} of cash.")
+        print(self)
+    def withdraw(self, amount):
+        self.balance -= amount
+        print(f"You withdrew {amount} of cash.")
+        print(self)
+account1 = BankAccount(1232143, 1000)

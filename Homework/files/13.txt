@@ -1,0 +1,43 @@
+from dataclasses import dataclass, field
+import math
+from abc import ABC, abstractmethod
+import datetime
+import json
+from turtle import left
+from venv import create
+import mysql.connector
+import typing
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox, simpledialog
+import sqlite3
+
+
+@dataclass
+class Laptop:
+    _brand:str
+    _model:str
+    _price:float
+    @property
+    def brand(self):
+        return self._brand
+    @brand.setter
+    def brand(self, brand):
+        self._brand = brand
+    @property
+    def model(self):
+        return self._model
+    @model.setter
+    def model(self, model):
+        self._model = model
+    @property
+    def price(self):
+        return self._price
+    @price.setter
+    def price(self, price):
+        self._price = price
+    def give_discount(self, amount):
+        print(self.price*(1-amount))
+laptop = Laptop("Dell", "7400", 18000)
+print(laptop)
+laptop.give_discount(0.1)
