@@ -1,0 +1,44 @@
+{
+  "app": {
+    "name": "ExampleApp",
+    "version": "1.0.0",
+    "debug": true
+  },
+  "database": {
+    "type": "NoSQL",
+    "host": "localhost",
+    "port": 27017,
+    "username": "admin",
+    "password": "password123",
+    "dbname": "exampledb"
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "/var/log/exampleapp.log"
+  },
+  "features": {
+    "authentication": {
+      "enabled": true,
+      "tokenExpiration": 3600
+    },
+    "caching": {
+      "enabled": true,
+      "cacheSize": 100,
+      "cacheExpiry": 600
+    },
+    "notifications": {
+      "email": {
+        "enabled": true,
+        "smtpServer": "smtp.example.com",
+        "smtpPort": 587,
+        "username": "emailuser",
+        "password": "emailpassword"
+      },
+      "sms": {
+        "enabled": false,
+        "provider": "twilio",
+        "apiKey": "your-twilio-api-key"
+      }
+    }
+  }
+}
